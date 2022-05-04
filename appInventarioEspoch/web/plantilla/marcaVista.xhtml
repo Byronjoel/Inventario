@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+
+
+    <body>
+
+        <p:growl id="mensajes" autoUpdate="true"/>
+        <h:form id="frmMarca">
+            <p:panel id="pnlMarca">
+                <p:dataTable id="tblMarca" value="#{marcaControlador.lstmarca}"
+                             var="marca" 
+                             paginator="true" rows="15" rowKey="#{marca.id_marca}" selectionMode="single" 
+                             selection="#{marcaControlador.objmarcaSel}">
+                    <f:facet name="header">
+                        Marca
+                    </f:facet>
+
+                    <p:column filterBy="#{marca.id_marca}" filterMatchMode="startsWith" 
+                              sortBy="#{marca.id_marca}" headerText="CODIGO">
+                        <h:outputText value="#{marca.id_marca}"/>
+                    </p:column>
+
+                    <p:column filterBy="#{marca.nombre_marca}" filterMatchMode="startsWith" 
+                              sortBy="#{marca.nombre_marca}" headerText="NOMBRE">
+                        <h:outputText value="#{marca.nombre_marca}"/>
+                    </p:column>
+
+                    <p:column filterBy="#{marca.descripcion}" filterMatchMode="startsWith" 
+                              sortBy="#{marca.descripcion}" headerText="DESCRIPCION">
+                        <h:outputText value="#{marca.descripcion}"/>
+                    </p:column>
+
+
+                    <p:column>  
+                        <f:facet name="header">  
+                            <h:outputText value="ACCIONES" />  
+                        </f:facet>  
+                        <p:commandButton id="btnModificarMarca" icon="ui-icon-pencil"  title="Modificar Marca"  
+                                         process="@this"   oncomplete="PF('wdlgModificarMarca').show()" 
+                                         update=":dlgModificarMarca, @form">                                   
+                            <f:setPropertyActionListener value="#{marca}" 
+                                                         target="#{marcaControlador.objmarcaSel}"/>
+                        </p:commandButton>
+
+
+                          <p:commandButton id="btnEliminarMarca" icon="ui-icon-close"  title="Eliminar Marca"  
+                                                 process="@this"   oncomplete="PF('wdlgEliminarMarca').show()" 
+                                                 update=":dlgEliminarMarca, @form">                                   
+                                    <f:setPropertyActionListener value="#{marca}" 
+                                                                 target="#{marcaControlador.objmarcaSel}"/>
+                                </p:commandButton>
+
+                        
+                        
+                    </p:column>  
+
+
+
+                    <f:facet name="footer">  
+                        <p:commandButton id="btnNuevo" value="Nuevo" icon="ui-icon-newwin" 
+                                         onclick="PF('wdlgNuevo').show();"  title="Agregar Marca" type="button"/>  
+
+                    </f:facet>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+
+
+
+        <p:dialog id="dlgNuevo" header="Nueva Marca" widgetVar="wdlgNuevo" 
+                  modal="true" closable="false" resizable="false"
+                  showEffect="fade" hideEffect="fade">  
+            <h:form id="frmNuevo">
+                <p:panelGrid id="pngNuevo" columns="2">
+                    <h:outputText value="Nombre:"/>
+                    <p:inputText value="#{marcaControlador.objMarca.nombre_marca}" style="text-transform: uppercase;" onkeyup="this.value = this.value.toUpperCase();"/>
+                    <h:outputText value="Descripcion"/>
+                    <p:inputText value="#{marcaControlador.objMarca.descripcion}" style="text-transform: uppercase;" onkeyup="this.value = this.value.toUpperCase();"/>
+
+                </p:panelGrid>
+                <p:commandButton value="Aceptar" action="#{marcaControlador.insertarMarca()}" update=":frmMarca:pnlMarca"/>
+                <p:commandButton value="Cancelar" onclick="PF('wdlgNuevo').hide();" type="reset"/>
+            </h:form> 
+        </p:dialog>   
+
+
+
+
+        <p:dialog id="dlgModificarMarca" header="Modificar Marca" widgetVar="wdlgModificarMarca" 
+                  modal="true" closable="false" resizable="false" showEffect="clip" hideEffect="fold">  
+            <h:form id="frmModificarMarca">
+
+                <p:panelGrid id="pngModificarMarca" columns="2">
+                    <h:outputText value="Nombre:"/>
+                    <p:inputText value="#{marcaControlador.objmarcaSel.nombre_marca}" title="ej: Marc"
+                                 required="true" requiredMessage="Ingrese el Nombre:" style="text-transform: uppercase;" onkeyup="this.value = this.value.toUpperCase();"/>
+                    <h:outputText value="Descripcion:"/>
+                    <p:inputText value="#{marcaControlador.objmarcaSel.descripcion}" title="ej: Ninguna"
+                                 required="true" requiredMessage="Ingrese la descricpion" style="text-transform: uppercase;" onkeyup="this.value = this.value.toUpperCase();"/>
+
+                </p:panelGrid>
+                <p:commandButton value="Aceptar" action="#{marcaControlador.modificarMarca()}" update=":frmMarca:pnlMarca"/>
+                <p:commandButton value="Cancelar" onclick="PF('wdlgModificarMarca').hide();" type="reset"/>
+            </h:form> 
+        </p:dialog>
+
+
+
+ <p:dialog id="dlgEliminarMarca" header="Eliminar Marca" widgetVar="wdlgEliminarMarca" 
+                          modal="true" closable="false" resizable="false" showEffect="clip" hideEffect="fold">  
+                    <h:form id="frmEliminarVendedor">
+
+                        <h:outputText value="¿Desea Eliminar la MARCA?"/>
+                        <p:panelGrid id="pngEliminarCliente" columns="2">
+                            <h:outputText value="Nombre:"/>
+                            <p:inputText value="#{marcaControlador.objmarcaSel.nombre_marca}" title="ej: Raul"
+                                         required="true"  disabled="true"/>
+                            <h:outputText value="Descripcion:"/>
+                            <p:inputText value="#{marcaControlador.objmarcaSel.descripcion}" title="ej: Ninguna"
+                                         required="true"  disabled="true"/>
+                                                    </p:panelGrid>
+                        <p:commandButton value="Aceptar" action="#{marcaControlador.eliminarMarca()}" 
+                                         update=":frmMarca:pnlMarca"/>
+                        <p:commandButton value="Cancelar" onclick="PF('wdlgEliminarMarca').hide();" type="reset"/>
+                    </h:form> 
+                </p:dialog>
+        
+        
+        
+    </body>
+</html>

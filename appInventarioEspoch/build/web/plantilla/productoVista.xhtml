@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+
+
+    <body>
+        <ui:composition template="../plantilla/Formularios.xhtml"> 
+            <ui:define name="top">
+                Productos Electronicos
+            </ui:define>
+            <ui:define name="contenido">
+        <p:growl id="mensajes" autoUpdate="true"/>
+        <h:form id="frmProducto">
+            <p:panel id="pnlProducto">
+                <p:dataTable id="tblProducto" value="#{productoControlador.lstproducto}"
+                             var="producto" 
+                             paginator="true" rows="15" rowKey="#{producto.id_producto}" selectionMode="single" 
+                             selection="#{productoControlador.objproductoSel}">
+                    <f:facet name="header">
+                        PRODUCTOS
+                    </f:facet>
+
+                    <p:column filterBy="#{producto.codigo_interno}" filterMatchMode="startsWith" 
+                              sortBy="#{producto.codigo_interno}" headerText="COD_EXT">
+                        <h:outputText value="#{producto.codigo_interno}"/>
+                    </p:column>
+
+                    <p:column filterBy="#{producto.codigo_barra}" filterMatchMode="startsWith" 
+                              sortBy="#{producto.codigo_barra}" headerText="C_BARRA">
+                        <h:outputText value="#{producto.codigo_barra}"/>
+                    </p:column>
+
+                    <p:column filterBy="#{producto.nombre_producto}" filterMatchMode="startsWith" 
+                              sortBy="#{producto.nombre_producto}" headerText="NOMBRE">
+                        <h:outputText value="#{producto.nombre_producto}"/>
+                    </p:column>
+
+                    <p:column filterBy="#{producto.serie_producto}" filterMatchMode="startsWith" 
+                              sortBy="#{producto.serie_producto}" headerText="SERIE">
+                        <h:outputText value="#{producto.serie_producto}"/>
+                    </p:column>
+
+                    <p:column filterBy="#{producto.fecha_ingreso}" filterMatchMode="startsWith" 
+                              sortBy="#{producto.fecha_ingreso}" headerText="FECHA">
+                        <h:outputText value="#{producto.fecha_ingreso}"/>
+                    </p:column>
+
+                    <p:column filterBy="#{producto.objColor.nombre_color}" filterMatchMode="startsWith" 
+                              sortBy="#{producto.objColor.nombre_color}" headerText="COLOR">
+                        <h:outputText value="#{producto.objColor.nombre_color}"/>
+                    </p:column>
+                    <p:column filterBy="#{producto.objMarca.nombre_marca}" filterMatchMode="startsWith" 
+                              sortBy="#{producto.objMarca.nombre_marca}" headerText="MARCA">
+                        <h:outputText value="#{producto.objMarca.nombre_marca}"/>
+                    </p:column>
+
+                    <p:column filterBy="#{producto.objModelo}" filterMatchMode="startsWith" 
+                              sortBy="#{producto.objModelo}" headerText="MODELO">
+                        <h:outputText value="#{producto.objModelo}"/>
+                    </p:column>
+
+                    <p:column filterBy="#{producto.estado_producto}" filterMatchMode="startsWith" 
+                              sortBy="#{producto.estado_producto}" headerText="ESTADO">
+                        <h:outputText value="#{producto.estado_producto}"/>
+                    </p:column>
+                    <p:column filterBy="#{producto.descripcion}" filterMatchMode="startsWith" 
+                              sortBy="#{producto.descripcion}" headerText="DESCRIPC">
+                        <h:outputText value="#{producto.descripcion}"/>
+                    </p:column>
+
+                    <p:column>  
+                        <f:facet name="header">  
+                            <h:outputText value="ACCIONES" />  
+                        </f:facet>  
+
+                        <p:commandButton id="btnModificarProducto" icon="ui-icon-pencil"  title="Modificar Producto"  
+                                         process="@this"   oncomplete="PF('wdlgModificarProducto').show()" 
+                                         update=":dlgModificarProducto, @form">                                   
+                            <f:setPropertyActionListener value="#{producto}" 
+                                                         target="#{productoControlador.objproductoSel}"/>
+                        </p:commandButton>
+
+                        <p:commandButton id="btnEliminarProducto" icon="ui-icon-close"  title="Eliminar Producto"  
+                                         process="@this"   oncomplete="PF('wdlgEliminarProducto').show()" 
+                                         update=":dlgEliminarProducto, @form">                                   
+                            <f:setPropertyActionListener value="#{producto}" 
+                                                         target="#{productoControlador.objproductoSel}"/>
+                        </p:commandButton>
+
+
+
+                    </p:column>  
+
+
+
+
+
+                    <f:facet name="footer">  
+                        <p:commandButton id="btnNuevo" value="Nuevo" icon="ui-icon-newwin" 
+                                         onclick="PF('wdlgNuevo').show();"  title="Agregar Producto" type="button"/>  
+
+                        <p:commandButton id="btnNuevo1" value="GenerarCodigo" icon="ui-icon-newwin" 
+                                         onclick="PF('wdlgCod').show();"  title="Crear Codigo" type="button"/>  
+
+
+
+
+
+
+
+                    </f:facet>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+
+       </ui:define>
+            
+            
+              <ui:define name="dialogos">
+        <p:dialog id="dlgNuevo" widgetVar="wdlgNuevo" modal="true" resizable="false"
+                  header="Insertar Producto" showEffect="fade" hideEffect="explode">
+
+            <h:form id="frmNuevo">                        
+                <p:panelGrid id="product" columns="2">                            
+
+
+
+                    <p:outputLabel value="CodExterno" id="CodE"/>
+                    <p:inputText id="txtCodE" label="Codigo_Externo:" 
+                                 value="#{productoControlador.objProducto.codigo_interno}" required="true" style="text-transform: uppercase;" onkeyup="this.value = this.value.toUpperCase();"  />
+
+
+
+                    <p:outputLabel value="Nombre" id="Nombre"/>
+                    <p:inputText id="txtNombre" label="Nombre:" 
+                                 value="#{productoControlador.objProducto.nombre_producto}" required="true" style="text-transform: uppercase;" onkeyup="this.value = this.value.toUpperCase();"/>
+
+
+                    <p:outputLabel value="Serie" id="Serie"/>
+                    <p:inputText id="txtSerie" label="Serie:" 
+                                 value="#{productoControlador.objProducto.serie_producto}" required="true" style="text-transform: uppercase;" onkeyup="this.value = this.value.toUpperCase();" />
+
+                    <p:outputLabel for="button" value="Fecha" />
+                    <p:calendar id="button" 
+                                navigator="true"
+                                pattern="dd/MM/yyyy"   value="#{productoControlador.objProducto.fecha_ingreso}" showOn="button" style="width: 160px"/>
+
+                  <p:outputLabel for="cbxEstado" value="Estado:"/>
+                    <p:selectOneMenu id="cbxEstado" value="#{productoControlador.objProducto.estado_producto}"  style="width:125px" required="true" >
+                                <f:selectItem itemLabel="BUENO" itemValue="1" />
+                                <f:selectItem itemLabel="MALO" itemValue="0" />                            
+                            </p:selectOneMenu>
+                    
+                    
+                    
+                    <p:outputLabel for="color" value="Color"/>
+                    <p:selectOneMenu id="color" value="#{productoControlador.objProducto.objColor.id_color}" style="width: 125px">
+                        <f:selectItems itemLabel="#{col.nombre_color}" itemValue="#{col.id_color}" value="#{colorControlador.lstcolor}" var="col"/>
+                    </p:selectOneMenu>
+
+
+                    <p:outputLabel for="marca" value="Marca"/>
+                    <p:selectOneMenu id="marca" value="#{productoControlador.objProducto.objMarca.id_marca}" style="width: 125px">
+                        <f:selectItems itemLabel="#{marca.nombre_marca}" itemValue="#{marca.id_marca}" value="#{marcaControlador.lstmarca}" var="marca"/>
+                    </p:selectOneMenu>
+                  
+                      <p:outputLabel value="Modelo" id="Modelo"/>
+                    <p:inputText id="txtModelo" label="Modelo:" 
+                                 value="#{productoControlador.objProducto.objModelo}"  style="text-transform: uppercase;" onkeyup="this.value = this.value.toUpperCase();" />
+
+           
+                    
+
+                    <p:outputLabel value="Descripcion" id="descripcion"/>
+                    <p:inputText id="txtDescripcion" label="Descripcion:" 
+                                 value="#{productoControlador.objProducto.descripcion}" required="true" style="text-transform: uppercase;" onkeyup="this.value = this.value.toUpperCase();"  />
+                </p:panelGrid>
+                <p:separator>
+                    <p:commandButton value="Ingresar" action="#{productoControlador.insertarProducto()}" update=":frmProducto:pnlProducto"/>
+                            
+                    <p:commandButton value="Cerrar" action="#{productoControlador.resetFail()}" onclick="PF('wdlgNuevo').hide();" type="reset" />   
+                </p:separator>
+            </h:form>
+        </p:dialog>
+
+
+
+
+
+        <p:dialog id="dlgCod" widgetVar="wdlgCod" modal="true" resizable="false"
+                  header="Crear Codigo" showEffect="fade" hideEffect="explode">
+
+            <h:form id="frmCodigo">                        
+                <p:panelGrid columns="2">                            
+
+                    <p:outputLabel value="Codigo" id="CodE"/>
+                    <p:inputText id="txtCodigo" label="Codigo a Generar:" 
+                                 value="#{productoControlador.dato}" required="true" style="text-transform: uppercase;" onkeyup="this.value = this.value.toUpperCase();"  />
+
+                </p:panelGrid>
+                <p:separator>
+                    <p:commandButton value="Crear" action="#{productoControlador.generadorCodigos()}" />
+                    <p:commandButton value="Cerrar" onclick="PF('wdlgCod').hide();" type="reset"/>   
+                </p:separator>
+
+            </h:form>
+        </p:dialog>
+
+<p:dialog id="dlgModificarProducto" header="Modificar Producto" widgetVar="wdlgModificarProducto" 
+                  modal="true" closable="false" resizable="false" showEffect="clip" hideEffect="fold">  
+            <h:form id="frmModificarProducto">
+
+                <p:panelGrid id="pngModificarProducto" columns="2">
+
+
+                    <h:outputText value="CodExterno:"/>
+                    <p:inputText value="#{productoControlador.objproductoSel.codigo_interno}" title="ej: Marc"
+                                 required="true" requiredMessage="Ingrese el Codigo:" />
+                    <h:outputText value="Nombre:"/>
+                    <p:inputText value="#{productoControlador.objproductoSel.nombre_producto}" title="ej: Ninguna"
+                                 required="true" requiredMessage="Ingrese el nombre" />
+                    <h:outputText value="Serie:"/>
+                    <p:inputText value="#{productoControlador.objproductoSel.serie_producto}" title="ej: Ninguna"
+                                 required="true" requiredMessage="Ingrese la serie" />
+
+
+                    <h:outputText  value="Fecha" />
+                    <p:calendar id="button" 
+                                navigator="true"
+                                pattern="dd/MM/yyyy"   value="#{productoControlador.objproductoSel.fecha_ingreso}" showOn="button" style="width: 160px"/>
+
+                    <h:outputText  value="Estado:"/>
+                    <p:selectOneMenu id="cbxEstado" value="#{productoControlador.objproductoSel.estado_producto}"  style="width:125px" required="true" >
+                        <f:selectItem itemLabel="BUENO" itemValue="1" />
+                        <f:selectItem itemLabel="MALO" itemValue="0" />                            
+                    </p:selectOneMenu>
+
+                    <h:outputText value="Color:"/>
+                    <p:selectOneMenu id="color" required="true" label="Color" value="#{productoControlador.objproductoSel.objColor.id_color}" style="width: 125px ">
+                        <f:selectItems itemLabel="#{col.nombre_color}" itemValue="#{col.id_color}" value="#{colorControlador.lstcolor}" var="col"/>
+                    </p:selectOneMenu>   
+
+                    <h:outputText value="Marca:"/>
+                    <p:selectOneMenu id="marca" required="true" label="Marca" value="#{productoControlador.objproductoSel.objMarca.id_marca}" style="width: 125px ">
+                        <f:selectItems itemLabel="#{mar.nombre_marca}" itemValue="#{mar.id_marca}" value="#{marcaControlador.lstmarca}" var="mar"/>
+                    </p:selectOneMenu>   
+
+                    <h:outputText value="Modelo:"/>
+                    <p:inputText value="#{productoControlador.objproductoSel.objModelo}" title="ej: Ninguna"
+                                 required="true" requiredMessage="Ingrese  el modelo" />
+                     <h:outputText value="Descripcion:"/>
+                     <p:inputText value="#{productoControlador.objproductoSel.descripcion}" title="ej: Ninguna"
+                                 required="true" requiredMessage="Ingrese  la descrpcion" />
+
+                </p:panelGrid>
+                <p:commandButton value="Aceptar" action="#{productoControlador.modificarProducto()}" update=":frmProducto:pnlProducto"/>
+                <p:commandButton value="Cancelar" onclick="PF('wdlgModificarProducto').hide();" type="reset"/>
+            </h:form> 
+        </p:dialog>
+
+
+        <p:dialog id="dlgEliminarProducto" header="Eliminar Producto" widgetVar="wdlgEliminarProducto" 
+                  modal="true" closable="false" resizable="false" showEffect="clip" hideEffect="fold">  
+            <h:form id="frmEliminarProducto">
+
+                <h:outputText value="¿Desea Eliminar el PRODUCTO?"/>
+                <p:panelGrid id="pngEliminarProducto" columns="2">
+                    <p:outputLabel value="CodExterno" />
+                    <p:inputText value="#{productoControlador.objproductoSel.codigo_interno}" required="true" disabled="true"/>
+                   <p:outputLabel value="Nombre" />
+                    <p:inputText value="#{productoControlador.objproductoSel.nombre_producto}" required="true" disabled="true"/>
+
+                    <p:outputLabel value="Serie" />
+                    <p:inputText value="#{productoControlador.objproductoSel.serie_producto}" required="true" disabled="true" />
+
+                    <p:outputLabel  value="Fecha" />
+                    <p:inputText   value="#{productoControlador.objproductoSel.fecha_ingreso}" required="true" disabled="true"/>
+
+                    <p:outputLabel value="Estado"/>
+                    <p:inputText  value="#{productoControlador.objproductoSel.estado_producto}" required="true" disabled="true" />
+
+                    <p:outputLabel value="Color"/>
+                    <p:inputText value="#{productoControlador.objproductoSel.objColor.nombre_color}" required="true" disabled="true" />
+                    <p:outputLabel  value="Marca"/>
+                    <p:inputText  value="#{productoControlador.objproductoSel.objMarca.nombre_marca}" required="true" disabled="true" />
+
+                    <p:outputLabel  value="Modelo"/>
+                    <p:inputText  value="#{productoControlador.objproductoSel.objModelo}" required="true" disabled="true"/>
+
+                    <p:outputLabel value="Descripcion" />
+                    <p:inputText value="#{productoControlador.objproductoSel.descripcion}" required="true" disabled="true"  />
+                </p:panelGrid>
+                <p:commandButton value="Aceptar" action="#{productoControlador.eliminarProducto()}" 
+                                 update=":frmProducto:pnlProducto"/>
+                <p:commandButton value="Cancelar" onclick="PF('wdlgEliminarProducto').hide();" type="reset"/>
+            </h:form> 
+        </p:dialog>
+
+
+
+</ui:define>
+</ui:composition>
+
+    </body>
+</html>

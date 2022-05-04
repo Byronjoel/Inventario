@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+
+
+    <body>
+
+        <p:growl id="mensajes" autoUpdate="true"/>
+        <h:form id="frmColor">
+            <p:panel id="pnlColor">
+                <p:dataTable id="tblColor" value="#{colorControlador.lstcolor}"
+                             var="color" 
+                             paginator="true" rows="15" rowKey="#{color.id_color}" selectionMode="single" 
+                             selection="#{colorControlador.objcolorSel}">
+                    <f:facet name="header">
+                       COLOR
+                    </f:facet>
+
+                    <p:column filterBy="#{color.id_color}" filterMatchMode="startsWith" 
+                              sortBy="#{color.id_color}" headerText="CODIGO">
+                        <h:outputText value="#{color.id_color}"/>
+                    </p:column>
+
+                    <p:column filterBy="#{color.nombre_color}" filterMatchMode="startsWith" 
+                              sortBy="#{color.nombre_color}" headerText="NOMBRE">
+                        <h:outputText value="#{color.nombre_color}"/>
+                    </p:column>
+
+
+
+
+                    <f:facet name="footer">  
+                        <p:commandButton id="btnNuevo" value="Nuevo" icon="ui-icon-newwin" 
+                                         onclick="PF('wdlgNuevo').show();"  title="Agregar Color" type="button"/>  
+
+                    </f:facet>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+
+
+
+
+
+
+
+
+
+
+
+        <p:dialog id="dlgNuevo" header="Nueva Color" widgetVar="wdlgNuevo" 
+                  modal="true" closable="false" resizable="false"
+                  showEffect="fade" hideEffect="fade">  
+            <h:form id="frmNuevo">
+                <p:panelGrid id="pngNuevo" columns="2">
+                    <h:outputText value="Nombre:"/>
+                    <p:inputText value="#{colorControlador.objColor.nombre_color}" style="text-transform: uppercase;" onkeyup="this.value = this.value.toUpperCase();"/>
+                    
+                </p:panelGrid>
+                <p:commandButton value="Aceptar" action="#{colorControlador.insertarColor()}" update=":frmColor:pnlColor"/>
+                <p:commandButton value="Cancelar" onclick="PF('wdlgNuevo').hide();" type="reset"/>
+            </h:form> 
+        </p:dialog>   
+
+
+
+
+
+
+
+
+
+
+
+
+    </body>
+</html>
